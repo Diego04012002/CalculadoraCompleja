@@ -104,51 +104,27 @@ public class CalculadoraCompleja extends Application {
 		primaryStage.show();
 		primaryStage.setTitle("Calculador Compleja");
 		
-		//para la suma y resta
 		Complejo a= new Complejo();
 		Complejo b= new Complejo();
 		Complejo c= new Complejo();
 		Complejo d= new Complejo();
 	
 		Bindings.bindBidirectional(operadorR.textProperty(), a.realProperty(), new NumberStringConverter());
-		Bindings.bindBidirectional(operadorR2.textProperty(), b.realProperty(), new NumberStringConverter());
+		Bindings.bindBidirectional(operadorR2.textProperty(), c.realProperty(), new NumberStringConverter());
 		
-		Bindings.bindBidirectional(operadorI.textProperty(), c.imaginarioProperty(), new NumberStringConverter());
+		Bindings.bindBidirectional(operadorI.textProperty(), b.imaginarioProperty(), new NumberStringConverter());
 		Bindings.bindBidirectional(operadorI2.textProperty(), d.imaginarioProperty(), new NumberStringConverter());
-		
-		//para la multiplicacion y multiplicacion
-		Complejo resultado1RM= new Complejo();
-		Complejo resultado2RM= new Complejo();
-		
-		Complejo resultado12M= new Complejo();
-		Complejo resultado22M= new Complejo();
-
-		Complejo resultado1IM= new Complejo();
-		Complejo resultado2IM= new Complejo();
-		
-		Complejo resultado12IM= new Complejo();
-		Complejo resultado22IM= new Complejo();
-		
-		Bindings.bindBidirectional(operadorR.textProperty(), resultado1RM.realProperty(), new NumberStringConverter());
-		Bindings.bindBidirectional(operadorI.textProperty(), resultado2RM.imaginarioProperty(), new NumberStringConverter());
-		Bindings.bindBidirectional(operadorR2.textProperty(), resultado12M.realProperty(), new NumberStringConverter());
-		Bindings.bindBidirectional(operadorI2.textProperty(), resultado22M.imaginarioProperty(), new NumberStringConverter());
-		
-		Bindings.bindBidirectional(operadorR.textProperty(), resultado1IM.realProperty(), new NumberStringConverter());
-		Bindings.bindBidirectional(operadorI2.textProperty(), resultado2IM.imaginarioProperty(), new NumberStringConverter());
-		Bindings.bindBidirectional(operadorR2.textProperty(), resultado12IM.realProperty(), new NumberStringConverter());
-		Bindings.bindBidirectional(operadorI.textProperty(), resultado22IM.imaginarioProperty(), new NumberStringConverter());
 		
 		operadores.getSelectionModel().selectedItemProperty().addListener((o, ov, nv)->{
 			if(nv=="+") {
-				DoubleBinding resultadR=a.realProperty().add(b.realProperty());
+				DoubleBinding resultadR=a.realProperty().add(c.realProperty());
 				resultadoR.textProperty().bind(Bindings.concat("")
 		                .concat(Bindings
-		                		.when(b.realProperty().isEqualTo(0))
+		                		.when(c.realProperty().isEqualTo(0))
 		                		.then("0")
 		                		.otherwise(resultadR.asString("%.0f"))));
 				
-				DoubleBinding resultadI=c.imaginarioProperty().add(d.imaginarioProperty());
+				DoubleBinding resultadI=b.imaginarioProperty().add(d.imaginarioProperty());
 				resultadoI.textProperty().bind(Bindings.concat("")
 		                .concat(Bindings
 		                		.when(d.imaginarioProperty().isEqualTo(0))
@@ -156,15 +132,15 @@ public class CalculadoraCompleja extends Application {
 		                		.otherwise(resultadI.asString("%.0f"))));
 			}
 			if(nv=="-") {
-				DoubleBinding resultadR=a.realProperty().subtract(b.realProperty());
+				DoubleBinding resultadR=a.realProperty().subtract(c.realProperty());
 				resultadoR.textProperty().bind(Bindings.concat("")
 		                .concat(Bindings
-		                		.when(b.realProperty().isEqualTo(0))
+		                		.when(c.realProperty().isEqualTo(0))
 		                		.then("0")
 		                		.otherwise(resultadR.asString("%.0f"))));
 				
 				
-				DoubleBinding resultadI=c.imaginarioProperty().subtract(d.imaginarioProperty());
+				DoubleBinding resultadI=b.imaginarioProperty().subtract(d.imaginarioProperty());
 				resultadoI.textProperty().bind(Bindings.concat("")
 		                .concat(Bindings
 		                		.when(d.imaginarioProperty().isEqualTo(0))
@@ -172,7 +148,7 @@ public class CalculadoraCompleja extends Application {
 		                		.otherwise(resultadI.asString("%.0f"))));
 			}
 			if(nv=="*") {
-				DoubleBinding resultadoRealReal=resultado1RM.realProperty().multiply(resultado12M.realProperty()).subtract(resultado2RM.imaginarioProperty().multiply(resultado22M.imaginarioProperty()));
+				DoubleBinding resultadoRealReal=a.realProperty().multiply(c.realProperty()).subtract(b.imaginarioProperty().multiply(d.imaginarioProperty()));
 				resultadoR.textProperty().bind(Bindings.concat("")
 		                .concat(Bindings
 		                		.when(resultadoRealReal.isEqualTo(0))
@@ -180,16 +156,16 @@ public class CalculadoraCompleja extends Application {
 		                		.otherwise(resultadoRealReal.asString("%.0f"))));
 				
 
-				DoubleBinding resultadoImaIma=resultado1IM.realProperty().multiply(resultado2IM.imaginarioProperty()).add(resultado22IM.imaginarioProperty().multiply(resultado12IM.realProperty()));
+				DoubleBinding resultadoImaIma=a.realProperty().multiply(d.imaginarioProperty()).add(b.imaginarioProperty().multiply(c.realProperty()));
 				resultadoI.textProperty().bind(Bindings.concat("")
 		                .concat(Bindings
 		                		.when(resultadoImaIma.isEqualTo(0))
 		                		.then("0")
 		                		.otherwise(resultadoImaIma.asString("%.0f"))));
 			}
-		    if(nv=="/") {
-				DoubleBinding operacionR=resultado1RM.realProperty().multiply(resultado12M.realProperty()).add(resultado2RM.imaginarioProperty().multiply(resultado22M.imaginarioProperty()));
-				DoubleBinding alCuadrado1=resultado12M.realProperty().multiply(resultado12M.realProperty()).add(resultado22M.imaginarioProperty().multiply(resultado22M.imaginarioProperty()));
+		    if(nv=="/") { 	
+				DoubleBinding operacionR=a.realProperty().multiply(c.realProperty()).add(b.imaginarioProperty().multiply(d.imaginarioProperty()));
+				DoubleBinding alCuadrado1=c.realProperty().multiply(c.realProperty()).add(d.imaginarioProperty().multiply(d.imaginarioProperty()));
 				DoubleBinding resultadoRealReal=operacionR.divide(alCuadrado1);
 				resultadoR.textProperty().bind(Bindings.concat("")
 		                .concat(Bindings
@@ -197,8 +173,8 @@ public class CalculadoraCompleja extends Application {
 		                		.then("0")
 		                		.otherwise(resultadoRealReal.asString("%.2f"))));
 
-				DoubleBinding operacionI=resultado22IM.imaginarioProperty().multiply(resultado12IM.realProperty()).subtract(resultado1IM.realProperty().multiply(resultado2IM.imaginarioProperty()));
-				DoubleBinding alCuadrado2=resultado12IM.realProperty().multiply(resultado12IM.realProperty()).add(resultado2IM.imaginarioProperty().multiply(resultado2IM.imaginarioProperty()));
+				DoubleBinding operacionI=b.imaginarioProperty().multiply(c.realProperty()).subtract(a.realProperty().multiply(d.imaginarioProperty()));
+				DoubleBinding alCuadrado2=c.realProperty().multiply(c.realProperty()).add(d.imaginarioProperty().multiply(d.imaginarioProperty()));
 				DoubleBinding resultadoImaIma=operacionI.divide(alCuadrado2);
 				resultadoI.textProperty().bind(Bindings.concat("")
 		                .concat(Bindings
